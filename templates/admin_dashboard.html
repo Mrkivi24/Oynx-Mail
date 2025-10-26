@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block content %}
+<h1 class="admin-header">Admin Dashboard</h1>
+
+<div class="admin-section">
+    <h2>Users</h2>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Username</th>
+                <th>Admin</th>
+                <th>Created</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.username }}</td>
+                <td>{{ "Affirmative" if u.is_admin else "Negative" }}</td>
+                <td>{{ u.created_at }}</td>
+                <td>
+                    {% if not u.is_admin %}
+                    <form action="{{ url_for('purge_user', user_id=u.id) }}" method="post" onsubmit="return confirm('Are you sure you want to delete {{ u.username }}?');">
+                        <button class="purge-btn" type="submit">Purge</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<hr class="admin-divider">
+
+<div class="admin-section">
+    <h2>All Emails</h2>
+    <table class="admin-table">
+        <thead>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Subject</th>
+                <th>Time</th>
+                <th>Trashed</th>
+                <th>Whisper</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in emails %}
+            <tr>
+                <td>{{ e.sender_username }}</td>
+                <td>{{ e.recipient_username }}</td>
+                <td><a href="{{ url_for('view_email', email_id=e.id) }}">{{ e.subject }}</a></td>
+                <td>{{ e.timestamp }}</td>
+                <td>{{ "🗑️" if e.trashed else "" }}</td>
+                <td>{{ "🔒" if e.is_whisper else "" }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6">No emails found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<form action="{{ url_for('purge_trash') }}" method="post" onsubmit="return confirm('Delete ALL trashed emails permanently?');">
+    <button class="purge-all-btn" type="submit"> Purge All Trash</button>
+</form>
+{% endblock %}

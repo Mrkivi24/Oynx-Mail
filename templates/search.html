@@ -1,0 +1,48 @@
+<!-- templates/search.html -->
+{% extends "base.html" %}
+{% block title %}Search - OYNX Mail{% endblock %}
+{% block content %}
+<div class="search-results">
+  <h2>Search results for “{{ q }}”</h2>
+
+  <div class="results-card">
+    <table class="mail-list">
+      <thead>
+        <tr>
+          <th>From</th>
+          <th>To</th>
+          <th>Subject</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for r in results %}
+          <tr>
+            <td>{{ r.sender_username }}</td>
+            <td>{{ r.recipient_username }}</td>
+            <td>
+              <a href="{{ url_for('view_email', email_id=r.id) }}">
+                {{ r.subject or "(no subject)" }}
+              </a>
+            </td>
+            <td>
+              {# Safe timestamp rendering: string -> show, None -> em dash, datetime -> format #}
+              {% if r.timestamp is string %}
+                {{ r.timestamp }}
+              {% elif r.timestamp is none %}
+                &mdash;
+              {% else %}
+                {{ r.timestamp.strftime('%Y-%m-%d %H:%M') }}
+              {% endif %}
+            </td>
+          </tr>
+        {% else %}
+          <tr>
+            <td colspan="4" class="no-results">No results found. Try another search.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

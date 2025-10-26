@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ email.subject }}</h2>
+<p><strong>From:</strong> {{ email.sender_username }}</p>
+<p><strong>To:</strong> {{ email.recipient_username }}</p>
+<p><strong>Sent:</strong> {{ email.timestamp }}</p>
+<hr>
+<div class="email-body">
+  <iframe 
+      src="{{ url_for('email_body', email_id=email.id) }}"
+      sandbox="allow-same-origin allow-popups allow-forms"
+      style="width:100%; height:70vh; border:none; background:#1e1f21; color:#fff; border-radius:8px;">
+  </iframe>
+</div>
+
+<script>
+const iframe = document.querySelector('.email-body iframe');
+iframe.addEventListener('load', () => {
+  try {
+    const doc = iframe.contentDocument || iframe.contentWindow.document;
+    iframe.style.height = doc.body.scrollHeight + 'px';
+  } catch(e) {}
+});
+</script>
+
+
+{% if attachments %}
+<h3>Attachments:</h3>
+<ul>
+    {% for att in attachments %}
+    <li><a href="{{ url_for('attachment', att_id=att.id) }}">{{ att.original_filename }}</a></li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<hr>
+<form action="{{ url_for('toggle_trash', email_id=email.id) }}" method="post">
+    {% if not email.is_read %}
+        <button type="submit" name="action" value="trash">Move to Trash</button>
+    {% elif email.is_read and not email.trashed %}
+        <button type="submit" name="action" value="trash">Move to Trash</button>
+    {% else %}
+        <button type="submit" name="action" value="restore">Restore</button>
+        <button type="submit" name="action" value="delete">Delete Permanently</button>
+    {% endif %}
+</form>
+{% endblock %}

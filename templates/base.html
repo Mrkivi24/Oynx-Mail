@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title if title else "OYNX mail" }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+    {% if current_user_id %}
+    <!-- Top Navbar -->
+    <div class="navbar">
+        <div class="logo">
+            <a href="{{ url_for('inbox') }}">OYNX-Mail 2.0</a>
+        </div>
+        <div class="search-bar">
+            <form action="{{ url_for('search') }}" method="get">
+                <input type="text" name="q" placeholder="Search mail">
+            </form>
+        </div>
+        
+        <div class="nav-user">
+            <span>{{ current_username }}</span>
+            <a href="{{ url_for('logout') }}">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+    <a href="{{ url_for('compose') }}" class="compose-btn">✉ Compose</a>
+    <ul>
+        <li><a href="{{ url_for('inbox') }}" class="{% if active_page=='inbox' %}active{% endif %}">Inbox</a></li>
+        <li><a href="{{ url_for('sent') }}" class="{% if active_page=='sent' %}active{% endif %}">Sent</a></li>
+        <li><a href="{{ url_for('trash') }}" class="{% if active_page=='trash' %}active{% endif %}">Trash</a></li>
+        {% if is_admin %}
+        <li><a href="{{ url_for('admin_dashboard') }}" class="{% if active_page=='admin' %}active{% endif %}">Admin</a></li>
+        {% endif %}
+    </ul>
+</aside>
+
+    {% endif %}
+
+        <!-- Main Content -->
+        <main class="content {% if not current_user_id %}full-width{% endif %}">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-container">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+            {% block content %}
+            <!-- Each page (Inbox, Sent, Compose, etc.) will inject content here -->
+            {% endblock %}
+        </main>
+    {% if current_user_id %}
+    </div>
+    {% endif %}
+
+    <!-- Optional Footer -->
+    <footer style="text-align:center; padding:0.5rem; color:var(--muted-text);">
+        &copy; {{ current_year if current_year else "2025" }} OYNX Mail
+    </footer>
+</body>
+</html>

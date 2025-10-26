@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-box" style="max-width:520px;">
+    <h1>Whisper Unlock</h1>
+    <p style="color:var(--muted-text); margin-bottom:1rem;">
+      This email is a whisper and requires a secret code to open.
+    </p>
+
+    <form method="post" action="{{ url_for('view_email', email_id=email_id) }}">
+      <label for="whisper_code" style="display:block; text-align:left; color:var(--muted-text); margin-bottom:0.4rem;">Enter whisper code</label>
+      <input id="whisper_code" name="whisper_code" type="password" placeholder="Secret code" required style="width:100%; padding:0.6rem; border-radius:8px; border:none; background:var(--secondary-bg); color:var(--text-color);">
+      <button type="submit" style="width:100%; margin-top:1rem;">Unlock</button>
+    </form>
+
+    <p style="margin-top:1rem; color:var(--muted-text); font-size:0.9rem;">
+      If the sender enabled self-destruct, this message will be deleted after it is viewed.
+    </p>
+  </div>
+</div>
+{% endblock %}

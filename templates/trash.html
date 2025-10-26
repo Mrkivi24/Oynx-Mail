@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Trash</h2>
+<table class="email-table">
+    <thead>
+        <tr>
+            <th>Sender</th>
+            <th>Recipient</th>
+            <th>Subject</th>
+            <th>Deleted</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for email in emails %}
+        <tr>
+            <td>{{ email.sender_username }}</td>
+            <td>{{ email.recipient_username }}</td>
+            <td><a href="{{ url_for('view_email', email_id=email.id) }}">{{ email.subject }}</a></td>
+            <td>{{ email.timestamp }}</td>
+            <td>
+                <form action="{{ url_for('toggle_trash', email_id=email.id) }}" method="post" style="display:flex; gap:0.5rem;">
+                    <button type="submit" name="action" value="restore">Restore</button>
+                    <button type="submit" name="action" value="delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="5" style="text-align:center; color:var(--muted-text);">Trash is empty.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

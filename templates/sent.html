@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Sent</h2>
+<table class="email-table">
+    <thead>
+        <tr>
+            <th>Recipient</th>
+            <th>Subject</th>
+            <th>Sent</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for email in emails %}
+        <tr>
+            <td>{{ email.recipient_username }}</td>
+            <td><a href="{{ url_for('view_email', email_id=email.id) }}">{{ email.subject }}</a></td>
+            <td>{{ email.timestamp }}</td>
+            <td>
+                <form action="{{ url_for('toggle_trash', email_id=email.id) }}" method="post">
+                    <button type="submit" name="action" value="trash">Trash</button>
+                </form>
+            </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="4">No emails have been sent.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

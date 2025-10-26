@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Compose Email</h1>
+
+<div class="compose-container">
+  <form method="POST" enctype="multipart/form-data">
+    <label for="recipient">To (username):</label>
+    <input type="text" id="recipient" name="recipient" placeholder="Recipient username" required>
+
+    <label for="subject">Subject:</label>
+    <input type="text" id="subject" name="subject" placeholder="Email subject">
+
+    <label for="body">Message:</label>
+    <textarea id="body" name="body" rows="10" placeholder="Write your message..."></textarea>
+
+    <label for="attachments">Attachments (you may choose multiple):</label>
+    <input type="file" id="attachments" name="attachments" multiple>
+
+    <hr style="margin:1.5rem 0; border:1px solid var(--border-color);">
+
+    <div class="whisper-section">
+      <label style="display:flex; align-items:center; gap:0.5rem;">
+        <input type="checkbox" id="is_whisper" name="is_whisper">
+        <span>Send as Whisper</span>
+      </label>
+
+      <div id="whisper_options" style="display:none; margin-top:1rem;">
+        <label for="whisper_code">Whisper Code (required to unlock):</label>
+        <input type="text" id="whisper_code" name="whisper_code" placeholder="Enter secret unlock code">
+
+        <label style="display:flex; align-items:center; gap:0.5rem; margin-top:0.5rem;">
+          <input type="checkbox" id="self_destruct" name="self_destruct">
+          <span>Self-destruct after viewing</span>
+        </label>
+      </div>
+    </div>
+
+    <button type="submit">Send</button>
+  </form>
+</div>
+
+<script>
+  const isWhisperCheckbox = document.getElementById('is_whisper');
+  const whisperOptions = document.getElementById('whisper_options');
+  isWhisperCheckbox.addEventListener('change', function() {
+    whisperOptions.style.display = this.checked ? 'block' : 'none';
+  });
+</script>
+{% endblock %}

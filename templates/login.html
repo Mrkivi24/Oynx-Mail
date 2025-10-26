@@ -1,0 +1,24 @@
+<!-- templates/login.html -->
+{% extends "base.html" %}
+{% block title %}Login - OYNX Mail{% endblock %}
+{% block content %}
+<div class="auth-container">
+  <div class="auth-card">
+    <h2>Welcome back to OYNX Mail</h2>
+    <form method="post" novalidate>
+      <label>
+        Username
+        <input name="username" required>
+      </label>
+      <label>
+        Password
+        <input name="password" type="password" required>
+      </label>
+      <div class="form-actions">
+        <button type="submit">Login</button>
+        <a href="{{ url_for('register') }}" class="link">Create an account</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
